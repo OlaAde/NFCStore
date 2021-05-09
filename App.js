@@ -1,93 +1,85 @@
-import React from 'react';
+import React, {useState} from 'react';
 import type {Node} from 'react';
 import {
     FlatList, Image,
     SafeAreaView, StatusBar,
-    StyleSheet,
-    Text, TouchableOpacity,
-    View,
+    StyleSheet, Text,
+    TouchableOpacity,
+
 } from 'react-native';
+import CartItem from './CartItem';
 
 
-const productsInCart = [{
-    id: '0',
-    'title': 'Shoulder rolls tee',
-    'description': 'Shoulder rolls tee description',
-    'url': 'https://storage.googleapis.com/material-vignettes.appspot.com/image/34-0.jpg',
-    'priceInDollars': 27,
-}, {
-    id: '1',
-    'title': 'Cerise scallop tee',
-    'description': 'Cerise scallop tee description',
-    'url': 'https://storage.googleapis.com/material-vignettes.appspot.com/image/33-0.jpg',
-    'priceInDollars': 42,
-}, {
-    id: '2',
-    'title': 'Grey slouch tank',
-    'description': 'Grey slouch tank description',
-    'url': 'https://storage.googleapis.com/material-vignettes.appspot.com/image/35-0.jpg',
-    'priceInDollars': 24,
-}, {
-    id: '3',
-    'title': 'Sunshirt dress',
-    'description': 'Sunshirt dress description',
-    'url': 'https://storage.googleapis.com/material-vignettes.appspot.com/image/36-0.jpg',
-    'priceInDollars': 58,
-}, {
-    id: '4',
-    'title': 'Fine lines tee',
-    'description': 'Fine lines tee description',
-    'url': 'https://storage.googleapis.com/material-vignettes.appspot.com/image/37-0.jpg',
-    'priceInDollars': 58,
-}];
-
-const CartItem = ({product}): Node => {
-    return (
-        <View style={styles.cartItemContainer}>
-            <Image style={styles.productImage} source={{uri: product.url}}/>
-            <View style={styles.cartItemInnerContainer}>
-                <View style={styles.cartItemTitleDescCancelIconContainer}>
-                    <View style={styles.cartItemTitleDescContainer}>
-                        <Text style={styles.titleText}>
-                            {product.title}
-                        </Text>
-                        <Text style={styles.descText}>
-                            {product.description}
-                        </Text>
-                    </View>
-                    <TouchableOpacity activeOpacity={0.4}>
-                        <Image source={require('./assets/icon_delete.png')} style={styles.icon}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.priceQuantityContainer}>
-                    <Text style={styles.priceText}>
-                        ${product.priceInDollars}
-                    </Text>
-                    <View style={styles.utility}/>
-                    <View style={styles.quantityContainer}>
-                        <TouchableOpacity activeOpacity={0.5}>
-                            <Image source={require('./assets/icon_minus.png')} style={styles.icon}/>
-                        </TouchableOpacity>
-                        <Text style={styles.quantityText}>3</Text>
-                        <TouchableOpacity activeOpacity={0.5}>
-                            <Image source={require('./assets/icon_plus.png')} style={styles.icon}/>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        </View>
-    );
+const allProductsInStore = {
+    '0': {
+        id: '0',
+        title: 'Shoulder rolls tee',
+        description: 'Shoulder rolls tee description',
+        url: 'https://storage.googleapis.com/material-vignettes.appspot.com/image/34-0.jpg',
+        priceInDollars: 27,
+        stock: 8,
+        quantity: 1,
+    }, '1': {
+        id: '1',
+        title: 'Cerise scallop tee',
+        description: 'Cerise scallop tee description',
+        url: 'https://storage.googleapis.com/material-vignettes.appspot.com/image/33-0.jpg',
+        priceInDollars: 42,
+        stock: 2,
+        quantity: 1,
+    }, '2': {
+        id: '2',
+        title: 'Grey slouch tank',
+        description: 'Grey slouch tank description',
+        url: 'https://storage.googleapis.com/material-vignettes.appspot.com/image/35-0.jpg',
+        priceInDollars: 24,
+        stock: 1,
+        quantity: 1,
+    },
+    '3': {
+        id: '3',
+        title: 'Sunshirt dress',
+        description: 'Sunshirt dress description',
+        url: 'https://storage.googleapis.com/material-vignettes.appspot.com/image/36-0.jpg',
+        priceInDollars: 58,
+        stock: 12,
+        quantity: 1,
+    }, '4': {
+        id: '4',
+        title: 'Fine lines tee',
+        description: 'Fine lines tee description',
+        url: 'https://storage.googleapis.com/material-vignettes.appspot.com/image/37-0.jpg',
+        priceInDollars: 58,
+        stock: 3,
+        quantity: 1,
+    },
 };
 
+
 const App: () => Node = () => {
+    const [productsInCart, updateProductsInCart] = useState(allProductsInStore);
+
+    const updateItemQuantity = (id, quantity) => {
+        productsInCart[id].quantity = quantity;
+        updateProductsInCart({...productsInCart});
+    };
+
+    const removeItem = (id) => {
+        delete productsInCart[id];
+        updateProductsInCart({...productsInCart});
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={'#FBB8AC'}/>
+            {!Object.keys(productsInCart).length && <Text style={styles.noItemsText}>No items in cart. Tap on the plus button  "+"  to add items to your cart</Text>}
             <FlatList
-                contentInsetAdjustmentBehavior="automatic" data={productsInCart}
-                renderItem={({item}) => <CartItem key={item.id} product={item}/>}/>
+                contentInsetAdjustmentBehavior="automatic" data={Object.values(productsInCart)}
+                renderItem={({item}) => <CartItem key={item.id} product={item}
+                                                  updateItemQuantity={updateItemQuantity} removeItem={removeItem}/>}/>
+
             <TouchableOpacity activeOpacity={0.5} style={styles.fabContainer}>
-                <Image source={require('./assets/icon_plus_fab.png')} style={ [styles.icon, styles.fabIcon]}/>
+                <Image source={require('./assets/icon_plus_fab.png')} style={[styles.icon, styles.fabIcon]}/>
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -102,65 +94,6 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
     },
-    productImage: {
-        height: 80,
-        width: 80,
-        borderRadius: 8,
-    },
-    cartItemContainer: {
-        height: 80,
-        padding: 8,
-        display: 'flex',
-        flexDirection: 'row',
-        marginVertical: 12,
-    },
-    cartItemInnerContainer: {
-        flex: 1,
-        display: 'flex',
-        height: 80,
-        paddingBottom: 4,
-    },
-    cartItemTitleDescCancelIconContainer: {
-        display: 'flex',
-        flex: 4,
-        flexDirection: 'row',
-    },
-    cartItemTitleDescContainer: {
-        alignContent: 'center',
-        justifyContent: 'space-evenly',
-        flex: 1,
-    },
-    titleText: {
-        marginLeft: 8,
-        fontSize: 18,
-    },
-    descText: {
-        marginLeft: 8,
-        fontSize: 14,
-    },
-    priceQuantityContainer: {
-        flex: 3,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    priceText: {
-        marginLeft: 8,
-        fontSize: 18,
-        color: 'slategray',
-    },
-    utility: {
-        flex: 1,
-    },
-    quantityContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    quantityText: {
-        fontSize: 16,
-        marginHorizontal: 8,
-    },
     fabContainer: {
         width: 60,
         height: 60,
@@ -171,9 +104,14 @@ const styles = StyleSheet.create({
         right: 10,
         justifyContent: 'center',
     },
-    fabIcon:{
-        alignSelf: 'center'
-    }
+    fabIcon: {
+        alignSelf: 'center',
+    },
+    noItemsText: {
+        textAlign: 'center',
+        fontSize: 18,
+        padding: 8
+    },
 });
 
 export default App;

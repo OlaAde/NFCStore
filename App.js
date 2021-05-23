@@ -78,7 +78,7 @@ const App: () => Node = () => {
         updateProductsInCart({...productsInCart});
     };
 
-    const onAddProduct = () => {
+    const onShowAddProductModal = () => {
         readNdef();
         setModalVisible(true);
     };
@@ -151,7 +151,7 @@ const App: () => Node = () => {
                 renderItem={({item}) => <CartItem key={item.id} product={item}
                                                   updateItemQuantity={updateItemQuantity} removeItem={removeItem}/>}/>
 
-            <TouchableOpacity activeOpacity={0.5} style={styles.fabContainer} onPress={onAddProduct}>
+            <TouchableOpacity activeOpacity={0.5} style={styles.fabContainer} onPress={onShowAddProductModal}>
                 <Image source={require('./assets/icon_plus_fab.png')} style={[styles.icon, styles.fabIcon]}/>
             </TouchableOpacity>
 
@@ -226,3 +226,4 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+

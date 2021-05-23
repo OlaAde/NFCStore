@@ -29,7 +29,7 @@ const CartItem = ({product, updateItemQuantity, removeItem}): Node => {
                         </Text>
                     </View>
                     <TouchableOpacity activeOpacity={0.4} onPress={onRemoveItem}>
-                        <Image source={require('./assets/icon_delete.png')} style={styles.icon}/>
+                        <Image source={require('../assets/icon_delete.png')} style={styles.icon}/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.priceQuantityContainer}>
@@ -40,12 +40,12 @@ const CartItem = ({product, updateItemQuantity, removeItem}): Node => {
                     <View style={styles.quantityContainer}>
                         <TouchableOpacity activeOpacity={0.5} disabled={product.quantity === 1}
                                           onPress={onDecreaseQuantity}>
-                            <Image source={require('./assets/icon_minus.png')} style={styles.icon}/>
+                            <Image source={require('../assets/icon_minus.png')} style={styles.icon}/>
                         </TouchableOpacity>
                         <Text style={styles.quantityText}>{product.quantity}</Text>
                         <TouchableOpacity activeOpacity={0.5} disabled={product.quantity === product.stock}
                                           onPress={onIncreaseQuantity}>
-                            <Image source={require('./assets/icon_plus.png')} style={styles.icon}/>
+                            <Image source={require('../assets/icon_plus.png')} style={styles.icon}/>
                         </TouchableOpacity>
                     </View>
                 </View>
